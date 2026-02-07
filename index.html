@@ -7,15 +7,13 @@
     <link rel="stylesheet" href="styles.css" />
 </head>
 
-<body  style="font-family:'Courier New'">
+<body>
     <header>
         <nav class="navbar">
             <div class="logo">Suhajda Karina</div>
-            <ul class="nav-links" id="nav-links">
-                <li><a href="https://github.com/SlyFoxAhri">Github</a></li>
-                <li><a href="#skills">LinkedIn</a></li>
-                <li><a href="#projects">Email</a></li>
-            </ul>
+            <div class="nav-links" id="nav-links">
+                <div id="email_btn"><a href="">Contact</a>
+                </div>
 
             <div class="burger" id="burger">
                 <span></span><span></span><span></span>
@@ -23,30 +21,42 @@
         </nav>
     </header>
 
-<div style="width: 100%;overflow:auto;">
-    <div style="float:left; width: 20%">
-        <h1>About Me</h1>
-        <p>
-            I'm a software engineer.
-        </p>
-    </div>
-    <div style="float:left;">  
-        <h1>Skills</h1>
-        <div class="skills-grid">
-            <div class="skill-card">C#</div>
-            <div class="skill-card">Java</div>
-            <div class="skill-card">Docker</div>
-            <div class="skill-card">HTML</div>
-            <div class="skill-card">CSS</div>
-            <div class="skill-card">TypeScript</div>
-            <div class="skill-card">React</div>
-            <div class="skill-card">UI/UX</div>
+    <div id="emailmodal" class="email_modal">
+        <div class="emailmodal_content" >
+            <span class="close"></span>
+            <ul class="contacts_list" style="list-style-type: none; margin: 0; padding: 0;">
+                <li><a href="https://github.com/SlyFoxAhri" target="_blank">Github</a></li>
+                <li><a href="https://hu.linkedin.com/in/karina-suhajda-182501295" target="_blank">LinkedIn</a></li>
+                <li><a href="mailto:suhajdakarina@gmail.com">suhajdakarina@gmail.com</a></li>
+            </ul>
         </div>
     </div>
-</div>
 
+    <section id="about" class="about_section">
+        <div style="width: 100%; overflow:auto;">
+            <div style="float:left; width: 20%">
+                <h1>About Me</h1>
+                <p>
+                    I'm a software engineer.
+                </p>
+            </div>
+            <div style="float:right; width: 75%;">  
+                <h1>Skills</h1>
+                <div class="skills-grid">
+                    <div class="skill-card">C#</div>
+                    <div class="skill-card">Java</div>
+                    <div class="skill-card">Docker</div>
+                    <div class="skill-card">HTML</div>
+                    <div class="skill-card">CSS</div>
+                    <div class="skill-card">TypeScript</div>
+                    <div class="skill-card">React</div>
+                    <div class="skill-card">UI/UX</div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <section id="projects" class="section">
+    <section id="projects" class="project_section">
         <h1>Projects</h1>
         <div class="projects-grid">
             <div class="project-card">
@@ -55,7 +65,7 @@
             </div>
             <div class="project-card">
                 <h2>Project 2</h2>
-                <p>A retro‑futuristic command console</p>
+                <p>A retro futuristic command console</p>
             </div>
             <div class="project-card">
                 <h2>Project 3</h2></h2>

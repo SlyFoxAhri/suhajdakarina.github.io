@@ -1,5 +1,6 @@
 /* GLOBAL */
 body {
+    font-family: 'Courier New', monospace;
     margin: 0;
     background: #000;
     color: #e60000;
@@ -11,7 +12,12 @@ h1, h2 {
     letter-spacing: 2px;
 }
 
-.section {
+.about_section {
+    padding: 80px 10%;
+    border-bottom: 1px solid rgba(255, 0, 0, 0.2);
+}
+
+.project_section {
     padding: 80px 10%;
     border-bottom: 1px solid rgba(255, 0, 0, 0.2);
 }
@@ -30,7 +36,7 @@ h1, h2 {
     border-bottom: 2px solid #e60000;
     position: sticky;
     top: 0;
-    z-index: 1000;
+    z-index: 1;
 }
 
 .logo {
@@ -56,10 +62,41 @@ h1, h2 {
 }
 
 .nav-links a:hover {
-    text-shadow: 0 0 10px #ff1a1a;
+    color: #a90000;
 }
 
-/* BURGER MENU (MOBILE) */
+.email_modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.emailmodal_content {
+    width: fit-content;
+    background-color: #a90000;
+    color: white;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 10px;
+    align-items: left;
+
+}
+.email_modal a {
+    width: 50%;
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    display: block;
+    padding: 5px;
+}
+
+
+/* burger menu on mobile 
 .burger {
     display: none;
     flex-direction: column;
@@ -73,16 +110,18 @@ h1, h2 {
     margin: 4px;
     transition: 0.3s;
 }
+*/
 
 /* SKILLS GRID */
 .skills-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     gap: 20px;
+    text-align: center;
 }
 
 .skill-card {
-    padding: 20px;
+    padding: 10px;
     border: 1px solid #e60000;
     text-align: center;
     background: #0a0a0a;
@@ -111,7 +150,7 @@ h1, h2 {
     box-shadow: 0 0 20px #ff1a1a;
 }
 
-/* RESPONSIVE */
+/* RESPONSIVE 
 @media (max-width: 768px) {
     .nav-links {
         position: absolute;
@@ -129,4 +168,6 @@ h1, h2 {
     .burger {
         display: flex;
     }
+    
 }
+    */
