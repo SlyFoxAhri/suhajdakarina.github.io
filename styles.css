@@ -194,6 +194,98 @@ header {
     to   { opacity: 1; transform: translateY(0); }
 }
 
+
+.lang-hybrid {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 1.5rem;
+    z-index: 400;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 0.35rem 0.7rem;
+    box-shadow: 0 0 20px var(--red-glow-sm);
+}
+
+.hybrid-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    color: var(--surface-2);
+    padding: 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    transition: color 0.15s;
+}
+
+/* Brackets */
+.hybrid-btn .br {
+    font-weight:bolder;
+    color: var(--surface-2);
+    transition: color 0.2s;
+    font-size: 0.8rem;
+}
+
+/* Language code */
+.hybrid-btn .val {
+    color: var(--surface-2);
+    transition: color 0.2s;
+    padding: 0 0.15rem;
+}
+
+/* Active state */
+.hybrid-btn.active .br  { color: var(--red-bright); }
+.hybrid-btn.active .val { color: var(--red-dim); }
+
+/* Hover (inactive only) */
+.hybrid-btn:not(.active):hover .br  { color: var(--red); }
+.hybrid-btn:not(.active):hover .val { color: var(--surface-2); }
+
+/* Glitch overlay — only fires on active button */
+.glitch-layer {
+    display: none;
+}
+
+.hybrid-btn.active .glitch-layer {
+    display: block;
+    position: absolute;
+    inset: 0;
+    padding-left: 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    color: var(--red-bright);
+    pointer-events: none;
+    animation: glitch-clip 3.5s steps(1) infinite;
+    white-space: nowrap;
+}
+
+@keyframes glitch-clip {
+    0%,88%,100% { clip-path: inset(100% 0 0 0); transform: none;            opacity: 0; }
+    89%          { clip-path: inset(0 0 65% 0);   transform: translateX(-2px); opacity: 1; }
+    91%          { clip-path: inset(35% 0 25% 0);  transform: translateX(2px);  opacity: 1; }
+    93%          { clip-path: inset(15% 0 55% 0);  transform: none;             opacity: 1; }
+    95%          { clip-path: inset(60% 0 10% 0);  transform: translateX(-1px); opacity: 1; }
+    97%          { clip-path: inset(5% 0 75% 0);   transform: translateX(1px);  opacity: 1; }
+}
+
+/* Separator between EN and HU */
+.hybrid-sep {
+    color: var(--red-dim);
+    font-size: 0.7rem;
+    letter-spacing: 0;
+    opacity: 0.7;
+}
+
+
 .about_inner {
     display: flex;
     gap: 4rem;
@@ -346,11 +438,20 @@ header {
     border-left: 2px solid var(--red);
 }*/
 
+.project-card-thumb img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.5;
+}
+
 .play-icon {
     font-size: 2.2rem;
-    color: var(--red-dim);
+    color: var(--white);
     position: relative;
-    z-index: 1;
+    z-index: 3;
     transition: color 0.2s, text-shadow 0.2s;
 }
 .project-card:hover .play-icon {

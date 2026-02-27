@@ -21,20 +21,37 @@
         </nav>
     </header>
 
+
+<div class="lang-hybrid" id="lang-selector">
+    <button class="hybrid-btn active" data-lang="en">
+        <span class="br">[</span><span class="val">EN</span><span class="br">]</span>
+        <span class="glitch-layer">EN</span>
+    </button>
+    <span class="hybrid-sep">//</span>
+    <button class="hybrid-btn" data-lang="hu">
+        <span class="br">[</span><span class="val">HU</span><span class="br">]</span>
+            <span class="glitch-layer">HU</span>
+    </button>
+</div>
+
+
+
+</div>
+
     <section id="about" class="about_section">
         <div class="about_inner">
 
             <div class="about_text">
-                <h1>// About me</h1>
-                <p>
-                    I'm a computer science student at Eszterházy Károly Catholic University,
+                <h1 data-en="// About me" data-hu="// Rólam"></h1>
+                <p data-en="I'm a computer science student at Eszterházy Károly Catholic University,
                     fluent in English and Hungarian. My main focus is backend development
-                    and cyber security.
+                    and cyber security." 
+                    data-hu="Programtervező informatikus szakon tanulok az Eszterházy Károly Katolikus Egyetemen, folyékonyan beszélek angolul és magyarul. A fő érdeklődési területem a backend development és a kiberbiztonság. ">
                 </p>
             </div>
 
             <div class="skills_block">
-                <h1>// Skills</h1>
+                <h1 data-en="// Skills" data-hu="// Készségek"></h1>
                 <div class="skills-grid">
                     <div class="skill-card">C#</div>
                     <div class="skill-card">Python</div>
@@ -57,16 +74,17 @@
     </section>
 
     <section id="projects" class="project_section">
-        <h1>// Projects</h1>
+        <h1 data-en="// Projects" data-hu="// Projektek"></h1>
         <div class="projects-grid">
 
             <div class="project-card" data-project="0">
                 <div class="project-card-thumb">
+                    <img src="pictures/grpc.jpg" alt="gRPC" height="130%" width="100%"/>
                     <span class="play-icon">▶</span>
                 </div>
                 <div class="project-card-info">
-                    <h2>gRPC Service</h2>
-                    <p>Secure remote procedure calls</p>
+                    <h2 data-en="gRPC Service" data-hu="gRPC Szolgáltatás"></h2>
+                    <p data-en="Secure remote procedure calls" data-hu="Biztonságos remote procedure call-ok"></p>
                 </div>
             </div>
 
@@ -77,8 +95,8 @@
                     <span class="play-icon">▶</span>
                 </div>
                 <div class="project-card-info">
-                    <h2>Retro Console</h2>
-                    <p>A retro futuristic command console</p>
+                    <h2 data-en="Retro Console" data-hu="Retró Konzol"></h2>
+                    <p data-en="A retro futuristic command console" data-hu="Egy retro futurisztikus kommand konzol"></p>
                 </div>
             </div>
 
