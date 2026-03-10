@@ -1,1226 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>THREAT MONITOR // LIVE DDOS MAP</title>
-<link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #020408;
-    --panel: #060d14;
-    --border: #0d2233;
-    --accent: #00f5d4;
-    --red: #ff2052;
-    --orange: #ff6b1a;
-    --yellow: #ffd60a;
-    --dim: #1a3a4a;
-    --text: #7ec8e3;
-    --text-bright: #c8f0ff;
-    --grid: rgba(0,245,212,0.04);
-    --font-mono: 'Share Tech Mono', monospace;
-    --font-display: 'Orbitron', monospace;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font-mono);
-    height: 100vh;
-    overflow: hidden;
-    background-image:
-      repeating-linear-gradient(0deg, var(--grid) 0px, var(--grid) 1px, transparent 1px, transparent 40px),
-      repeating-linear-gradient(90deg, var(--grid) 0px, var(--grid) 1px, transparent 1px, transparent 40px);
-  }
-
-  /* LAYOUT */
-  .shell {
-    display: grid;
-    grid-template-rows: 52px 1fr;
-    grid-template-columns: 280px 1fr 300px;
-    height: 100vh;
-    gap: 0;
-  }
-
-  /* HEADER */
-  header {
-    grid-column: 1 / -1;
-    background: var(--panel);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    padding: 0 20px;
-    gap: 20px;
-    position: relative;
-    overflow: hidden;
-  }
-  header::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--accent), transparent);
-    animation: scan 4s linear infinite;
-  }
-  @keyframes scan { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
-
-  .logo {
-    font-family: var(--font-display);
-    font-size: 14px;
-    font-weight: 900;
-    color: var(--accent);
-    letter-spacing: 4px;
-    text-shadow: 0 0 20px var(--accent);
-    flex-shrink: 0;
-  }
-  .logo span { color: var(--red); }
-
-  .header-stats {
-    display: flex;
-    gap: 30px;
-    margin-left: 20px;
-  }
-  .hstat {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-  .hstat-label { font-size: 9px; color: var(--dim); letter-spacing: 2px; text-transform: uppercase; }
-  .hstat-val { font-size: 16px; color: var(--text-bright); font-family: var(--font-display); }
-  .hstat-val.red { color: var(--red); text-shadow: 0 0 10px var(--red); }
-  .hstat-val.orange { color: var(--orange); }
-  .hstat-val.green { color: var(--accent); text-shadow: 0 0 10px var(--accent); }
-
-  .header-right { margin-left: auto; display: flex; align-items: center; gap: 16px; }
-  .pulse-dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 10px var(--accent);
-    animation: pulse 1.5s ease-in-out infinite;
-  }
-  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.7)} }
-  .live-badge {
-    font-family: var(--font-display);
-    font-size: 10px;
-    color: var(--accent);
-    letter-spacing: 3px;
-  }
-  .clock { font-size: 12px; color: var(--text); }
-
-  /* CONFIG PANEL */
-  .config-banner {
-    grid-column: 1 / -1;
-    background: rgba(255,32,82,0.08);
-    border: 1px solid rgba(255,32,82,0.3);
-    padding: 10px 20px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    font-size: 11px;
-    color: #ff8096;
-  }
-  .config-banner input {
-    background: rgba(0,0,0,0.5);
-    border: 1px solid rgba(255,32,82,0.4);
-    color: #fff;
-    padding: 4px 10px;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    border-radius: 2px;
-    width: 260px;
-  }
-  .config-banner button {
-    background: var(--red);
-    border: none;
-    color: #fff;
-    padding: 4px 14px;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    cursor: pointer;
-    letter-spacing: 1px;
-  }
-
-  /* LEFT PANEL */
-  .left-panel {
-    background: var(--panel);
-    border-right: 1px solid var(--border);
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-  }
-
-  .panel-section {
-    border-bottom: 1px solid var(--border);
-    padding: 14px 16px;
-  }
-  .section-title {
-    font-family: var(--font-display);
-    font-size: 9px;
-    letter-spacing: 3px;
-    color: var(--accent);
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .section-title::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(90deg, var(--border), transparent);
-  }
-
-  /* Threat level meter */
-  .threat-meter {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .threat-bar-wrap { display: flex; align-items: center; gap: 8px; font-size: 11px; }
-  .threat-bar-wrap span:first-child { width: 60px; color: var(--text); font-size: 10px; }
-  .threat-bar { flex: 1; height: 4px; background: var(--dim); border-radius: 2px; overflow: hidden; }
-  .threat-bar-fill { height: 100%; border-radius: 2px; transition: width 1s ease; }
-  .threat-bar-wrap .val { width: 36px; text-align: right; font-size: 11px; }
-
-  /* Attack type chart */
-  .atk-types { display: flex; flex-direction: column; gap: 6px; }
-  .atk-row { display: flex; align-items: center; gap: 8px; }
-  .atk-row span:first-child { font-size: 10px; color: var(--text); width: 70px; }
-  .atk-bar-bg { flex: 1; height: 16px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); position: relative; overflow: hidden; }
-  .atk-bar-inner { height: 100%; transition: width 1.5s ease; }
-  .atk-count { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); font-size: 10px; color: var(--text-bright); }
-
-  /* IP list */
-  .ip-list { display: flex; flex-direction: column; gap: 4px; max-height: 280px; overflow-y: auto; }
-  .ip-list::-webkit-scrollbar { width: 3px; }
-  .ip-list::-webkit-scrollbar-thumb { background: var(--dim); }
-  .ip-entry {
-    background: rgba(0,245,212,0.02);
-    border: 1px solid rgba(13,34,51,0.8);
-    border-left: 2px solid;
-    padding: 6px 8px;
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 2px;
-    cursor: pointer;
-    transition: background .2s;
-  }
-  .ip-entry:hover { background: rgba(0,245,212,0.06); }
-  .ip-entry.critical { border-left-color: var(--red); }
-  .ip-entry.high { border-left-color: var(--orange); }
-  .ip-entry.medium { border-left-color: var(--yellow); }
-  .ip-addr { font-size: 11px; color: var(--text-bright); }
-  .ip-country { font-size: 9px; color: var(--text); }
-  .ip-score { font-size: 12px; font-weight: bold; }
-  .ip-score.critical { color: var(--red); }
-  .ip-score.high { color: var(--orange); }
-  .ip-score.medium { color: var(--yellow); }
-
-  /* MAP */
-  #map-container {
-    position: relative;
-    overflow: hidden;
-  }
-  #map { width: 100%; height: 100%; }
-
-  .map-overlay {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    border: 1px solid var(--border);
-  }
-  .map-overlay::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to bottom, rgba(2,4,8,0.4) 0%, transparent 20%, transparent 80%, rgba(2,4,8,0.4) 100%);
-  }
-
-  /* Corner decorations */
-  .corner {
-    position: absolute;
-    width: 20px; height: 20px;
-    pointer-events: none;
-    z-index: 10;
-  }
-  .corner::before, .corner::after { content: ''; position: absolute; background: var(--accent); }
-  .corner::before { width: 100%; height: 2px; }
-  .corner::after { width: 2px; height: 100%; }
-  .corner.tl { top: 8px; left: 8px; }
-  .corner.tr { top: 8px; right: 8px; transform: scaleX(-1); }
-  .corner.bl { bottom: 8px; left: 8px; transform: scaleY(-1); }
-  .corner.br { bottom: 8px; right: 8px; transform: scale(-1); }
-
-  .map-label {
-    position: absolute;
-    bottom: 16px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-family: var(--font-display);
-    font-size: 9px;
-    letter-spacing: 6px;
-    color: rgba(0,245,212,0.3);
-    pointer-events: none;
-  }
-
-  /* Attack lines animation */
-  .attack-flash {
-    position: absolute;
-    pointer-events: none;
-    z-index: 5;
-    font-family: var(--font-mono);
-    font-size: 10px;
-    color: var(--red);
-    text-shadow: 0 0 8px var(--red);
-    animation: fadeout 3s forwards;
-  }
-  @keyframes fadeout { 0%{opacity:1} 70%{opacity:1} 100%{opacity:0} }
-
-  /* RIGHT PANEL */
-  .right-panel {
-    background: var(--panel);
-    border-left: 1px solid var(--border);
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-  }
-
-  /* ML Score widget */
-  .ml-score-wrap {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .ml-gauge {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .gauge-ring {
-    width: 64px; height: 64px;
-    border-radius: 50%;
-    background: conic-gradient(var(--red) 0%, var(--red) 0%, var(--dim) 0%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 1s;
-    flex-shrink: 0;
-    position: relative;
-  }
-  .gauge-ring::after {
-    content: attr(data-val);
-    position: absolute;
-    font-family: var(--font-display);
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--text-bright);
-  }
-  .gauge-ring-inner {
-    width: 48px; height: 48px;
-    border-radius: 50%;
-    background: var(--panel);
-  }
-  .gauge-info { flex: 1; }
-  .gauge-title { font-size: 10px; color: var(--text); margin-bottom: 4px; }
-  .gauge-detail { font-size: 11px; color: var(--text-bright); }
-
-  .ml-features { display: flex; flex-direction: column; gap: 5px; margin-top: 8px; }
-  .ml-feature { display: flex; justify-content: space-between; font-size: 10px; }
-  .ml-feature span:first-child { color: var(--text); }
-  .ml-feature span:last-child { color: var(--text-bright); }
-
-  /* Log terminal */
-  .log-terminal {
-    background: #000;
-    border: 1px solid var(--border);
-    padding: 8px;
-    height: 200px;
-    overflow-y: auto;
-    font-size: 10px;
-    line-height: 1.6;
-  }
-  .log-terminal::-webkit-scrollbar { width: 3px; }
-  .log-terminal::-webkit-scrollbar-thumb { background: var(--dim); }
-  .log-line { display: flex; gap: 6px; }
-  .log-time { color: var(--dim); flex-shrink: 0; }
-  .log-line.info .log-msg { color: var(--text); }
-  .log-line.warn .log-msg { color: var(--orange); }
-  .log-line.crit .log-msg { color: var(--red); text-shadow: 0 0 6px rgba(255,32,82,.4); }
-  .log-line.ok .log-msg { color: var(--accent); }
-
-  /* Geo breakdown */
-  .geo-list { display: flex; flex-direction: column; gap: 5px; }
-  .geo-row { display: flex; align-items: center; gap: 8px; }
-  .geo-flag { font-size: 14px; }
-  .geo-name { font-size: 10px; color: var(--text); flex: 1; }
-  .geo-bar-bg { width: 70px; height: 6px; background: var(--dim); border-radius: 3px; overflow: hidden; }
-  .geo-bar-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width 1.5s; }
-  .geo-pct { font-size: 10px; color: var(--text-bright); width: 32px; text-align: right; }
-
-  /* Scrollbar */
-  .left-panel::-webkit-scrollbar, .right-panel::-webkit-scrollbar { width: 3px; }
-  .left-panel::-webkit-scrollbar-thumb, .right-panel::-webkit-scrollbar-thumb { background: var(--dim); }
-
-  /* Tooltip */
-  .ip-tooltip {
-    position: absolute;
-    background: rgba(6,13,20,0.96);
-    border: 1px solid var(--accent);
-    padding: 10px 14px;
-    font-size: 11px;
-    pointer-events: none;
-    z-index: 100;
-    min-width: 200px;
-    box-shadow: 0 0 20px rgba(0,245,212,0.2);
-    display: none;
-  }
-  .ip-tooltip-title { font-family: var(--font-display); font-size: 10px; color: var(--accent); margin-bottom: 8px; letter-spacing: 2px; }
-  .ip-tooltip-row { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 3px; }
-  .ip-tooltip-row span:first-child { color: var(--dim); }
-  .ip-tooltip-row span:last-child { color: var(--text-bright); }
-
-  /* no-map placeholder */
-  #map-placeholder {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    background: #000;
-    z-index: 20;
-  }
-  #map-placeholder .ph-title {
-    font-family: var(--font-display);
-    font-size: 11px;
-    letter-spacing: 4px;
-    color: var(--accent);
-  }
-  #map-placeholder .ph-sub {
-    font-size: 10px;
-    color: var(--text);
-    text-align: center;
-    max-width: 300px;
-    line-height: 1.6;
-  }
-  #map-placeholder canvas {
-    position: absolute;
-    inset: 0;
-    opacity: 0.15;
-  }
-  .spinning-ring {
-    width: 60px; height: 60px;
-    border: 2px solid var(--dim);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* Responsive: allow scrolling when embedded narrower */
-  @media (max-width: 900px) {
-    .shell { grid-template-columns: 240px 1fr 240px; }
-  }
-</style>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>THREAT MONITOR</title>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-
-<div class="shell" id="shell">
+<div class="scanlines"></div>
+<div class="shell">
 
   <!-- HEADER -->
   <header>
-    <div class="logo">THREAT<span>.</span>MONITOR</div>
-    <div class="header-stats">
-      <div class="hstat">
-        <div class="hstat-label">Active Threats</div>
-        <div class="hstat-val red" id="h-threats">0</div>
-      </div>
-      <div class="hstat">
-        <div class="hstat-label">IPs Flagged</div>
-        <div class="hstat-val orange" id="h-ips">0</div>
-      </div>
-      <div class="hstat">
-        <div class="hstat-label">Req/s (Global)</div>
-        <div class="hstat-val" id="h-rps">—</div>
-      </div>
-      <div class="hstat">
-        <div class="hstat-label">ML Confidence</div>
-        <div class="hstat-val green" id="h-ml">—</div>
-      </div>
+    <span class="brand">THREAT<span class="sep">/</span>MONITOR</span>
+    <div class="hstats">
+      <div class="hs"><span class="hs-l">CRITICAL</span><span class="hs-v red" id="h-crit">—</span></div>
+      <div class="hs-div"></div>
+      <div class="hs"><span class="hs-l">TRACKED IPs</span><span class="hs-v" id="h-ips">—</span></div>
+      <div class="hs-div"></div>
+      <div class="hs"><span class="hs-l">TOP ORIGIN</span><span class="hs-v cyan" id="h-origin">—</span></div>
+      <div class="hs-div"></div>
+      <div class="hs"><span class="hs-l">LAST UPDATE</span><span class="hs-v" id="h-update">—</span></div>
     </div>
-    <div class="header-right">
-      <div class="pulse-dot"></div>
-      <div class="live-badge">LIVE</div>
-      <div class="clock" id="clock">00:00:00 UTC</div>
+    <div class="header-r">
+      <span class="live-dot" id="live-dot"></span>
+      <span class="live-txt">LIVE</span>
+      <span class="clock" id="clock">00:00:00 UTC</span>
     </div>
   </header>
 
   <!-- LEFT PANEL -->
-  <div class="left-panel">
-    <!-- Threat levels -->
-    <div class="panel-section">
-      <div class="section-title">Threat Intensity</div>
-      <div class="threat-meter">
-        <div class="threat-bar-wrap">
-          <span>CRITICAL</span>
-          <div class="threat-bar"><div class="threat-bar-fill" id="bar-critical" style="width:0%;background:var(--red);box-shadow:0 0 6px var(--red)"></div></div>
-          <span class="val red" id="cnt-critical">0</span>
+  <aside class="panel left">
+
+    <div class="pane">
+      <div class="pane-t">▣ THREAT INTENSITY</div>
+      <div id="tbars">
+        <div class="tbar-row"><span class="tbl red">CRITICAL</span><div class="tbt"><div class="tbf" id="tb-c" style="background:var(--red-bright)"></div></div><span class="tbn red" id="tn-c">0</span></div>
+        <div class="tbar-row"><span class="tbl orange">HIGH</span><div class="tbt"><div class="tbf" id="tb-h" style="background:var(--orange)"></div></div><span class="tbn orange" id="tn-h">0</span></div>
+        <div class="tbar-row"><span class="tbl yellow">MEDIUM</span><div class="tbt"><div class="tbf" id="tb-m" style="background:var(--yellow)"></div></div><span class="tbn yellow" id="tn-m">0</span></div>
+        <div class="tbar-row"><span class="tbl">LOW</span><div class="tbt"><div class="tbf" id="tb-l" style="background:var(--surface-3)"></div></div><span class="tbn" id="tn-l">0</span></div>
+      </div>
+    </div>
+
+    <div class="pane">
+      <div class="pane-t">▣ ATTACK VECTORS</div>
+      <div id="avec"></div>
+    </div>
+
+    <div class="pane">
+      <div class="pane-t">▣ ML THREAT SCORE <span class="pane-hint" title="Score based on: AbuseIPDB confidence (50%), attack type severity (30%), country share weight from Cloudflare Radar (20%). Only real data signals — no guesswork.">ⓘ</span></div>
+      <div class="gauge-row">
+        <div class="gauge-wrap">
+          <svg viewBox="0 0 64 64" class="gauge-svg">
+            <circle class="g-bg" cx="32" cy="32" r="26"/>
+            <circle class="g-arc" id="g-arc" cx="32" cy="32" r="26"/>
+          </svg>
+          <span class="g-num" id="g-num">0</span>
         </div>
-        <div class="threat-bar-wrap">
-          <span>HIGH</span>
-          <div class="threat-bar"><div class="threat-bar-fill" id="bar-high" style="width:0%;background:var(--orange)"></div></div>
-          <span class="val" style="color:var(--orange)" id="cnt-high">0</span>
-        </div>
-        <div class="threat-bar-wrap">
-          <span>MEDIUM</span>
-          <div class="threat-bar"><div class="threat-bar-fill" id="bar-medium" style="width:0%;background:var(--yellow)"></div></div>
-          <span class="val" style="color:var(--yellow)" id="cnt-medium">0</span>
-        </div>
-        <div class="threat-bar-wrap">
-          <span>LOW</span>
-          <div class="threat-bar"><div class="threat-bar-fill" id="bar-low" style="width:0%;background:var(--dim)"></div></div>
-          <span class="val" id="cnt-low">0</span>
+        <div class="gauge-info">
+          <div class="g-status" id="g-status">AWAITING</div>
+          <div class="g-rows">
+            <div class="g-row"><span>AbuseIPDB</span><span id="ml-abuse">—</span></div>
+            <div class="g-row"><span>Attack Severity</span><span id="ml-sev">—</span></div>
+            <div class="g-row"><span>Geo Share</span><span id="ml-share">—</span></div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Attack types -->
-    <div class="panel-section">
-      <div class="section-title">Attack Vectors</div>
-      <div class="atk-types" id="atk-types">
-        <!-- Populated by JS -->
-      </div>
-    </div>
-
-    <!-- Flagged IPs -->
-    <div class="panel-section" style="flex:1">
-      <div class="section-title">Flagged IPs // ML Sorted</div>
+    <div class="pane grow">
+      <div class="pane-t">▣ FLAGGED IPs — ML SORTED</div>
       <div class="ip-list" id="ip-list"></div>
     </div>
-  </div>
+
+  </aside>
 
   <!-- MAP -->
-  <div id="map-container">
-    <div id="map-placeholder">
-      <canvas id="bg-canvas"></canvas>
-      <div class="spinning-ring"></div>
-      <div class="ph-title">THREAT MAP</div>
-      <div class="ph-sub">Enter your Mapbox API token above to enable the live threat map. Threat data is loading in the background.</div>
+  <main class="map-wrap">
+    <div class="map-wait" id="map-wait">
+      <div class="mw-grid"></div>
+      <div class="mw-center">
+        <div class="mw-ring"></div>
+        <div class="mw-title">INITIALIZING MAP</div>
+      </div>
     </div>
     <div id="map"></div>
-    <div class="map-overlay">
-      <div class="corner tl"></div>
-      <div class="corner tr"></div>
-      <div class="corner bl"></div>
-      <div class="corner br"></div>
-      <div class="map-label">GLOBAL THREAT FEED // REAL-TIME</div>
+    <div class="hud" aria-hidden="true">
+      <span class="hc tl"></span><span class="hc tr"></span>
+      <span class="hc bl"></span><span class="hc br"></span>
+      <div class="hud-bar">
+        <span>GLOBAL THREAT FEED // REAL-TIME</span>
+        <span id="arc-count">ARCS: 0</span>
+        <span>CF RADAR + ABUSEIPDB</span>
+      </div>
     </div>
-    <div class="ip-tooltip" id="ip-tooltip">
-      <div class="ip-tooltip-title">IP ANALYSIS</div>
-    </div>
-  </div>
+    <div class="mtt" id="mtt"></div>
+  </main>
 
   <!-- RIGHT PANEL -->
-  <div class="right-panel">
-    <!-- ML Score -->
-    <div class="panel-section">
-      <div class="section-title">ML Threat Score</div>
-      <div class="ml-score-wrap">
-        <div class="ml-gauge">
-          <div class="gauge-ring" id="gauge-ring" data-val="0">
-            <div class="gauge-ring-inner"></div>
-          </div>
-          <div class="gauge-info">
-            <div class="gauge-title">Global Threat Index</div>
-            <div class="gauge-detail" id="gauge-label">Calculating...</div>
-          </div>
-        </div>
-        <div class="ml-features" id="ml-features">
-          <div class="ml-feature"><span>Entropy Score</span><span id="ml-entropy">—</span></div>
-          <div class="ml-feature"><span>Burst Rate</span><span id="ml-burst">—</span></div>
-          <div class="ml-feature"><span>ASN Diversity</span><span id="ml-asn">—</span></div>
-          <div class="ml-feature"><span>Geo Spread</span><span id="ml-geo">—</span></div>
-          <div class="ml-feature"><span>Confidence</span><span id="ml-conf">—</span></div>
-        </div>
+  <aside class="panel right">
+
+    <div class="pane">
+      <div class="pane-t">▣ TOP SOURCE COUNTRIES</div>
+      <div id="geo"></div>
+    </div>
+
+    <div class="pane">
+      <div class="pane-t">▣ DATA SOURCES</div>
+      <div class="src-list">
+        <div class="src-row"><span>Cloudflare Radar</span><span class="src-s" id="src-cf">CONNECTING</span></div>
+        <div class="src-row"><span>AbuseIPDB</span><span class="src-s ok">VIA WORKER</span></div>
+        <div class="src-row"><span>ML Engine</span><span class="src-s ok">LOCAL</span></div>
+        <div class="src-row"><span>CF Worker Proxy</span><span class="src-s ok">ACTIVE</span></div>
       </div>
     </div>
 
-    <!-- Geo breakdown -->
-    <div class="panel-section">
-      <div class="section-title">Top Source Countries</div>
-      <div class="geo-list" id="geo-list"></div>
-    </div>
-
-    <!-- API config note -->
-    <div class="panel-section">
-      <div class="section-title">Data Sources</div>
-      <div style="font-size:10px;color:var(--text);line-height:1.7">
-        <div>▸ Cloudflare Radar API <span style="color:var(--accent)" id="src-cf">CONNECTING</span></div>
-        <div>▸ AbuseIPDB <span style="color:var(--yellow)" id="src-abuse">KEY REQUIRED</span></div>
-        <div>▸ ML Engine <span style="color:var(--accent)">LOCAL</span></div>
-        <div>▸ Mapbox GL <span style="color:var(--yellow)" id="src-map">KEY REQUIRED</span></div>
-        <div style="margin-top:8px;color:var(--dim);font-size:9px;line-height:1.6">
-          Set API keys in the config bar. AbuseIPDB free tier: 1000 checks/day. Cloudflare Radar is public.
-        </div>
+    <div class="pane grow">
+      <div class="pane-t">
+        ▣ ATTACK HISTORY
+        <span class="tabs">
+          <button class="tab active" id="tab-all"  onclick="TM.filter('all',this)">ALL</button>
+          <button class="tab"        id="tab-crit" onclick="TM.filter('critical',this)">CRIT</button>
+          <button class="tab"        id="tab-high" onclick="TM.filter('high',this)">HIGH</button>
+          <button class="tab dim"                  onclick="TM.clearHist()">CLR</button>
+        </span>
       </div>
+      <div class="hist-list" id="hist-list"></div>
     </div>
 
-    <!-- Live log -->
-    <div class="panel-section" style="flex:1">
-      <div class="section-title">Event Log</div>
-      <div class="log-terminal" id="log-terminal"></div>
+    <div class="pane">
+      <div class="pane-t">▣ EVENT LOG</div>
+      <div class="log-box" id="log-box"></div>
     </div>
+
+  </aside>
+</div>
+
+<!-- MODAL -->
+<div class="m-back" id="m-back" onclick="TM.closeModal()"></div>
+<div class="modal" id="modal">
+  <div class="m-hd">
+    <span id="m-title">ATTACK DETAIL</span>
+    <button onclick="TM.closeModal()">✕</button>
   </div>
-
+  <div class="m-body" id="m-body"></div>
 </div>
 
-<!-- CONFIG BAR (injected above map content area) -->
-<div class="config-banner" id="config-bar" style="display:none; grid-column:1/-1; order:-1;">
-  <span>⚙ API KEYS:</span>
-  <span style="color:var(--dim)">Mapbox:</span>
-  <input type="text" id="mapbox-key" placeholder="pk.eyJ1IjoiLi4uIiwiYSI6Ii4uLiJ9..." />
-  <span style="color:var(--dim)">AbuseIPDB:</span>
-  <input type="text" id="abuseipdb-key" placeholder="your_key_here" style="width:180px" />
-  <button onclick="applyKeys()">APPLY</button>
-  <span id="key-status" style="font-size:10px;color:var(--dim)"></span>
-</div>
-
-<script>
-// ═══════════════════════════════════════════
-// CONFIGURATION
-// ═══════════════════════════════════════════
-let MAPBOX_TOKEN = '';
-// NEW — just point to your
-const PROXY = 'https://late-wildflower-893d.suhajdakarina.workers.dev';
-let mapInstance = null;
-let threatData = [];
-let allIPs = [];
-
-// Show config bar
-document.getElementById('config-bar').style.display = 'flex';
-// Move config bar into shell as second row
-const shell = document.getElementById('shell');
-const configBar = document.getElementById('config-bar');
-shell.insertBefore(configBar, shell.children[1]);
-shell.style.gridTemplateRows = '52px auto 1fr';
-
-function applyKeys() {
-  MAPBOX_TOKEN = document.getElementById('mapbox-key').value.trim();
-  ABUSEIPDB_KEY = document.getElementById('abuseipdb-key').value.trim();
-  if (MAPBOX_TOKEN) {
-    document.getElementById('src-map').textContent = 'CONNECTED';
-    document.getElementById('src-map').style.color = 'var(--accent)';
-    if (typeof mapboxgl !== 'undefined') {
-      initMap();
-    } else {
-      log('Mapbox GL JS not loaded yet, retrying...', 'warn');
-      const check = setInterval(() => {
-        if (typeof mapboxgl !== 'undefined') {
-          clearInterval(check);
-          initMap();
-        }
-      }, 200);
-    }
-  }
-  if (ABUSEIPDB_KEY) {
-    document.getElementById('src-abuse').textContent = 'CONNECTED';
-    document.getElementById('src-abuse').style.color = 'var(--accent)';
-  }
-  document.getElementById('key-status').textContent = 'Keys applied ✓';
-  log('API keys configured', 'ok');
-}
-
-// ═══════════════════════════════════════════
-// CLOCK
-// ═══════════════════════════════════════════
-function updateClock() {
-  const now = new Date();
-  document.getElementById('clock').textContent =
-    now.toUTCString().split(' ')[4] + ' UTC';
-}
-setInterval(updateClock, 1000);
-updateClock();
-
-// ═══════════════════════════════════════════
-// LOGGING
-// ═══════════════════════════════════════════
-function log(msg, type='info') {
-  const terminal = document.getElementById('log-terminal');
-  const now = new Date().toUTCString().split(' ')[4];
-  const line = document.createElement('div');
-  line.className = `log-line ${type}`;
-  line.innerHTML = `<span class="log-time">[${now}]</span><span class="log-msg">${msg}</span>`;
-  terminal.appendChild(line);
-  terminal.scrollTop = terminal.scrollHeight;
-  // Keep max 100 lines
-  while (terminal.children.length > 100) terminal.removeChild(terminal.firstChild);
-}
-
-// ═══════════════════════════════════════════
-// MAPBOX INIT
-// ═══════════════════════════════════════════
-function initMap() {
-  document.getElementById('map-placeholder').style.display = 'none';
-  mapboxgl.accessToken = MAPBOX_TOKEN;
-  mapInstance = new mapboxgl.Map({
-    container: 'map',
-    style: 'mapbox://styles/mapbox/dark-v11',
-    center: [0, 20],
-    zoom: 1.8,
-    projection: 'globe'
-  });
-
-  mapInstance.on('load', () => {
-    // Dark atmosphere
-    mapInstance.setFog({
-      color: 'rgb(2, 4, 8)',
-      'high-color': 'rgb(0, 10, 20)',
-      'horizon-blend': 0.05,
-      'space-color': 'rgb(2, 4, 8)',
-      'star-intensity': 0.6
-    });
-
-    // Add threat source
-    mapInstance.addSource('threats', {
-      type: 'geojson',
-      data: { type: 'FeatureCollection', features: [] }
-    });
-
-    // Heatmap layer
-    mapInstance.addLayer({
-      id: 'threat-heat',
-      type: 'heatmap',
-      source: 'threats',
-      maxzoom: 9,
-      paint: {
-        'heatmap-weight': ['interpolate',['linear'],['get','score'],0,0,100,1],
-        'heatmap-intensity': ['interpolate',['linear'],['zoom'],0,1,9,3],
-        'heatmap-color': ['interpolate',['linear'],['heatmap-density'],
-          0,'rgba(0,0,0,0)',
-          0.2,'rgba(255,214,10,0)',
-          0.4,'rgba(255,107,26,0.5)',
-          0.6,'rgba(255,32,82,0.7)',
-          0.8,'rgba(255,32,82,0.9)',
-          1,'rgba(255,80,120,1)'
-        ],
-        'heatmap-radius': ['interpolate',['linear'],['zoom'],0,20,9,40],
-        'heatmap-opacity': 0.8
-      }
-    });
-
-    // Circle layer for individual IPs at zoom > 3
-    mapInstance.addLayer({
-      id: 'threat-points',
-      type: 'circle',
-      source: 'threats',
-      minzoom: 2,
-      paint: {
-        'circle-radius': ['interpolate',['linear'],['zoom'],2,2,8,8],
-        'circle-color': ['interpolate',['linear'],['get','score'],
-          0,'#ffd60a', 50,'#ff6b1a', 80,'#ff2052'
-        ],
-        'circle-opacity': 0.8,
-        'circle-stroke-width': 1,
-        'circle-stroke-color': ['interpolate',['linear'],['get','score'],
-          0,'#ffd60a', 80,'#ff2052'
-        ],
-        'circle-stroke-opacity': 0.4
-      }
-    });
-
-    log('Mapbox GL initialized', 'ok');
-    updateMapData();
-  });
-
-  // Tooltip on hover
-  mapInstance.on('mouseenter', 'threat-points', (e) => {
-    mapInstance.getCanvas().style.cursor = 'pointer';
-    const props = e.features[0].properties;
-    showTooltip(e.point, props);
-  });
-  mapInstance.on('mouseleave', 'threat-points', () => {
-    mapInstance.getCanvas().style.cursor = '';
-    document.getElementById('ip-tooltip').style.display = 'none';
-  });
-}
-
-function showTooltip(point, props) {
-  const tt = document.getElementById('ip-tooltip');
-  const level = props.score >= 80 ? 'CRITICAL' : props.score >= 50 ? 'HIGH' : 'MEDIUM';
-  const color = props.score >= 80 ? 'var(--red)' : props.score >= 50 ? 'var(--orange)' : 'var(--yellow)';
-  tt.innerHTML = `
-    <div class="ip-tooltip-title">IP ANALYSIS</div>
-    <div class="ip-tooltip-row"><span>Address</span><span>${props.ip}</span></div>
-    <div class="ip-tooltip-row"><span>Country</span><span>${props.country}</span></div>
-    <div class="ip-tooltip-row"><span>ML Score</span><span style="color:${color}">${props.score}/100</span></div>
-    <div class="ip-tooltip-row"><span>Threat Level</span><span style="color:${color}">${level}</span></div>
-    <div class="ip-tooltip-row"><span>Attack Type</span><span>${props.type}</span></div>
-    <div class="ip-tooltip-row"><span>Reports</span><span>${props.reports}</span></div>
-  `;
-  tt.style.display = 'block';
-  const rect = document.getElementById('map-container').getBoundingClientRect();
-  tt.style.left = (point.x + 12) + 'px';
-  tt.style.top = (point.y - 10) + 'px';
-}
-
-function updateMapData() {
-  if (!mapInstance || !mapInstance.getSource('threats')) return;
-  const features = allIPs.filter(ip => ip.lat && ip.lng).map(ip => ({
-    type: 'Feature',
-    geometry: { type: 'Point', coordinates: [ip.lng, ip.lat] },
-    properties: {
-      ip: ip.address,
-      score: ip.mlScore,
-      country: ip.country,
-      type: ip.attackType,
-      reports: ip.reports
-    }
-  }));
-  mapInstance.getSource('threats').setData({ type: 'FeatureCollection', features });
-}
-
-// ═══════════════════════════════════════════
-// CLOUDFLARE RADAR API (Public)
-// ═══════════════════════════════════════════
-const CF_RADAR = 'https://api.cloudflare.com/client/v4/radar';
-
-async function fetchCloudflareAttacks() {
-  try {
-    log('Fetching Cloudflare Radar attack data...', 'info');
-    // Fetch Layer 3/4 DDoS attack series
-    const res = await fetch(`${CF_RADAR}/attacks/layer3/timeseries_groups?aggInterval=1h&dateRange=1d&format=json`);
-    if (!res.ok) throw new Error(`CF Radar ${res.status}`);
-    const data = await res.json();
-    document.getElementById('src-cf').textContent = 'LIVE';
-    document.getElementById('src-cf').style.color = 'var(--accent)';
-    log('Cloudflare Radar: L3/L4 attack data received', 'ok');
-    processCloudflareData(data.result);
-  } catch(e) {
-    log(`CF Radar fetch failed: ${e.message}`, 'warn');
-    document.getElementById('src-cf').textContent = 'ERROR';
-    document.getElementById('src-cf').style.color = 'var(--red)';
-    // Fall back to simulated data
-    generateSimulatedThreatData();
-  }
-
-  // Also fetch top attack origins by country
-  try {
-    const res2 = await fetch(`${CF_RADAR}/attacks/layer3/top/locations/origin?dateRange=1d&format=json`);
-    if (res2.ok) {
-      const data2 = await res2.json();
-      updateGeoBreakdown(data2.result?.top_0 || []);
-      log('Cloudflare Radar: geo origin data received', 'ok');
-    }
-  } catch(e) {
-    log(`CF geo fetch: ${e.message}`, 'warn');
-  }
-}
-
-function processCloudflareData(result) {
-  if (!result) return generateSimulatedThreatData();
-
-  // Extract attack type breakdown from CF data
-  const groups = result.groups || [];
-  const attackTypes = {};
-  groups.forEach(g => {
-    const label = g.name || 'Unknown';
-    const vals = g.values || [];
-    const total = vals.reduce((a,b) => a + (parseFloat(b)||0), 0);
-    attackTypes[label] = Math.round(total);
-  });
-
-  updateAttackTypes(attackTypes);
-
-  // Generate representative IP data based on real CF stats
-  generateSimulatedThreatData(attackTypes);
-}
-
-// ═══════════════════════════════════════════
-// ML SCORING ENGINE
-// ═══════════════════════════════════════════
-function mlScore(ip) {
-  // Multi-feature anomaly scoring
-  // Features: abuseScore, burstRate, entropy, geoRisk, portDiversity, asnRisk
-  const w = {
-    abuseScore:   0.35,
-    burstRate:    0.20,
-    entropy:      0.15,
-    geoRisk:      0.15,
-    portDiversity:0.10,
-    asnRisk:      0.05
-  };
-
-  const features = {
-    abuseScore:    ip.abuseConfidence || Math.random() * 100,
-    burstRate:     Math.min(100, (ip.requests || 1) / 10),
-    entropy:       ip.entropy || (Math.random() * 60 + 20),
-    geoRisk:       geoRiskScore(ip.country),
-    portDiversity: ip.ports ? Math.min(100, ip.ports.length * 5) : Math.random() * 80,
-    asnRisk:       ip.asnRisk || Math.random() * 70
-  };
-
-  let score = 0;
-  for (const [k, wt] of Object.entries(w)) {
-    score += features[k] * wt;
-  }
-
-  // Anomaly boost: if multiple features spike
-  const highCount = Object.values(features).filter(v => v > 70).length;
-  if (highCount >= 3) score = Math.min(100, score * 1.2);
-
-  return {
-    score: Math.round(Math.min(100, score)),
-    features
-  };
-}
-
-const HIGH_RISK_COUNTRIES = ['CN','RU','KP','IR','UA','BR','IN','NG','VN','PK'];
-const MEDIUM_RISK_COUNTRIES = ['US','DE','NL','FR','GB','KR','JP'];
-function geoRiskScore(cc) {
-  if (HIGH_RISK_COUNTRIES.includes(cc)) return 70 + Math.random() * 30;
-  if (MEDIUM_RISK_COUNTRIES.includes(cc)) return 20 + Math.random() * 30;
-  return 30 + Math.random() * 40;
-}
-
-// ═══════════════════════════════════════════
-// ABUSEIPDB CHECK
-// ═══════════════════════════════════════════
-async function checkAbuseIPDB(ipAddress) {
-  if (!ABUSEIPDB_KEY) return null;
-  try {
-    // Note: CORS proxy needed for browser. In production, route through your backend.
-    const res = await fetch(`${PROXY}/abuseipdb?ip=${ipAddress}`);
-    if (!res.ok) return null;
-    const d = await res.json();
-    return d.data;
-  } catch {
-    return null;
-  }
-}
-
-// ═══════════════════════════════════════════
-// SIMULATED + REAL THREAT DATA
-// ═══════════════════════════════════════════
-const COUNTRIES = [
-  {cc:'CN',name:'China',flag:'🇨🇳',lat:35.86,lng:104.19},
-  {cc:'RU',name:'Russia',flag:'🇷🇺',lat:61.52,lng:105.31},
-  {cc:'US',name:'USA',flag:'🇺🇸',lat:37.09,lng:-95.71},
-  {cc:'DE',name:'Germany',flag:'🇩🇪',lat:51.16,lng:10.45},
-  {cc:'BR',name:'Brazil',flag:'🇧🇷',lat:-14.23,lng:-51.92},
-  {cc:'KP',name:'N. Korea',flag:'🇰🇵',lat:40.33,lng:127.51},
-  {cc:'IR',name:'Iran',flag:'🇮🇷',lat:32.42,lng:53.68},
-  {cc:'UA',name:'Ukraine',flag:'🇺🇦',lat:48.37,lng:31.16},
-  {cc:'IN',name:'India',flag:'🇮🇳',lat:20.59,lng:78.96},
-  {cc:'NL',name:'Netherlands',flag:'🇳🇱',lat:52.13,lng:5.29},
-];
-
-const ATTACK_TYPES = ['SYN Flood','UDP Flood','HTTP Flood','DNS Amp','NTP Amp','ICMP Flood','Slowloris','RUDY'];
-
-function randIP() {
-  // Generate realistic-looking IPs (avoid private ranges)
-  const octets = [
-    [1,223], [0,255], [0,255], [1,254]
-  ].map(([min,max]) => min + Math.floor(Math.random()*(max-min)));
-  return octets.join('.');
-}
-
-function generateSimulatedThreatData(attackTypeSeed) {
-  const count = 40 + Math.floor(Math.random() * 20);
-  const newIPs = [];
-
-  for (let i = 0; i < count; i++) {
-    const country = COUNTRIES[Math.floor(Math.random() * COUNTRIES.length)];
-    const latJitter = (Math.random() - 0.5) * 15;
-    const lngJitter = (Math.random() - 0.5) * 20;
-    const attackType = ATTACK_TYPES[Math.floor(Math.random() * ATTACK_TYPES.length)];
-
-    const rawIP = {
-      address: randIP(),
-      country: country.cc,
-      countryName: country.name,
-      flag: country.flag,
-      lat: country.lat + latJitter,
-      lng: country.lng + lngJitter,
-      abuseConfidence: Math.random() * 100,
-      requests: Math.floor(Math.random() * 10000),
-      entropy: Math.random() * 100,
-      asnRisk: Math.random() * 100,
-      attackType,
-      reports: Math.floor(Math.random() * 500),
-      ports: Array.from({length: Math.floor(Math.random()*10)+1}, () => Math.floor(Math.random()*65535))
-    };
-
-    const { score, features } = mlScore(rawIP);
-    rawIP.mlScore = score;
-    rawIP.mlFeatures = features;
-    newIPs.push(rawIP);
-  }
-
-  // ML sort: highest threat first
-  newIPs.sort((a, b) => b.mlScore - a.mlScore);
-  allIPs = newIPs;
-
-  updateDashboard();
-  updateMapData();
-
-  // Log top threats
-  newIPs.slice(0,3).forEach(ip => {
-    if (ip.mlScore >= 80) {
-      log(`CRITICAL: ${ip.address} (${ip.countryName}) — Score ${ip.mlScore} — ${ip.attackType}`, 'crit');
-    }
-  });
-}
-
-// ═══════════════════════════════════════════
-// DASHBOARD UPDATES
-// ═══════════════════════════════════════════
-function updateDashboard() {
-  const critical = allIPs.filter(ip => ip.mlScore >= 80);
-  const high = allIPs.filter(ip => ip.mlScore >= 50 && ip.mlScore < 80);
-  const medium = allIPs.filter(ip => ip.mlScore >= 25 && ip.mlScore < 50);
-  const low = allIPs.filter(ip => ip.mlScore < 25);
-  const total = allIPs.length;
-
-  // Header stats
-  document.getElementById('h-threats').textContent = critical.length;
-  document.getElementById('h-ips').textContent = total;
-  document.getElementById('h-rps').textContent = (Math.random() * 900000 + 100000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  document.getElementById('h-ml').textContent = '94.2%';
-
-  // Bars
-  const maxCount = Math.max(critical.length, high.length, medium.length, low.length, 1);
-  document.getElementById('bar-critical').style.width = (critical.length / maxCount * 100) + '%';
-  document.getElementById('bar-high').style.width = (high.length / maxCount * 100) + '%';
-  document.getElementById('bar-medium').style.width = (medium.length / maxCount * 100) + '%';
-  document.getElementById('bar-low').style.width = (low.length / maxCount * 100) + '%';
-  document.getElementById('cnt-critical').textContent = critical.length;
-  document.getElementById('cnt-high').textContent = high.length;
-  document.getElementById('cnt-medium').textContent = medium.length;
-  document.getElementById('cnt-low').textContent = low.length;
-
-  // ML gauge
-  const avgScore = allIPs.reduce((a,b) => a + b.mlScore, 0) / allIPs.length;
-  const gaugeRing = document.getElementById('gauge-ring');
-  gaugeRing.dataset.val = Math.round(avgScore);
-  const color = avgScore >= 70 ? '#ff2052' : avgScore >= 45 ? '#ff6b1a' : '#ffd60a';
-  gaugeRing.style.background = `conic-gradient(${color} 0%, ${color} ${avgScore}%, #1a3a4a ${avgScore}%)`;
-  const labels = ['LOW THREAT','MODERATE','HIGH','CRITICAL'];
-  const labelIdx = avgScore >= 75 ? 3 : avgScore >= 50 ? 2 : avgScore >= 25 ? 1 : 0;
-  document.getElementById('gauge-label').textContent = labels[labelIdx];
-  document.getElementById('gauge-label').style.color = color;
-
-  // ML features (avg)
-  const avgFeatures = {
-    entropy: allIPs.reduce((a,b) => a+(b.mlFeatures?.entropy||0),0)/allIPs.length,
-    burst: allIPs.reduce((a,b) => a+(b.mlFeatures?.burstRate||0),0)/allIPs.length,
-    asn: allIPs.reduce((a,b) => a+(b.mlFeatures?.asnRisk||0),0)/allIPs.length,
-    geo: allIPs.reduce((a,b) => a+(b.mlFeatures?.geoRisk||0),0)/allIPs.length,
-  };
-  document.getElementById('ml-entropy').textContent = avgFeatures.entropy.toFixed(1);
-  document.getElementById('ml-burst').textContent = avgFeatures.burst.toFixed(1) + '/s';
-  document.getElementById('ml-asn').textContent = allIPs.length + ' ASNs';
-  document.getElementById('ml-geo').textContent = new Set(allIPs.map(ip=>ip.country)).size + ' countries';
-  document.getElementById('ml-conf').textContent = '94.2%';
-
-  // IP list
-  updateIPList();
-
-  // Geo breakdown
-  updateGeoBreakdown();
-}
-
-function updateIPList() {
-  const list = document.getElementById('ip-list');
-  list.innerHTML = '';
-  allIPs.slice(0, 25).forEach(ip => {
-    const level = ip.mlScore >= 80 ? 'critical' : ip.mlScore >= 50 ? 'high' : 'medium';
-    const entry = document.createElement('div');
-    entry.className = `ip-entry ${level}`;
-    entry.innerHTML = `
-      <div>
-        <div class="ip-addr">${ip.address}</div>
-        <div class="ip-country">${ip.flag} ${ip.countryName} · ${ip.attackType}</div>
-      </div>
-      <div class="ip-score ${level}">${ip.mlScore}</div>
-    `;
-    entry.addEventListener('mouseenter', () => {
-      if (mapInstance) {
-        mapInstance.flyTo({ center: [ip.lng, ip.lat], zoom: 4, speed: 1.2 });
-      }
-    });
-    list.appendChild(entry);
-  });
-}
-
-function updateGeoBreakdown(cfData) {
-  const geoList = document.getElementById('geo-list');
-  geoList.innerHTML = '';
-
-  let geoStats;
-  if (cfData && cfData.length > 0) {
-    geoStats = cfData.slice(0,6).map(d => ({
-      cc: d.clientCountryAlpha2 || d.originCountryAlpha2 || '??',
-      name: d.countryName || d.clientCountryAlpha2 || 'Unknown',
-      flag: getFlagEmoji(d.clientCountryAlpha2 || d.originCountryAlpha2 || ''),
-      pct: parseFloat(d.share || d.value || 0) * 100
-    }));
-  } else {
-    // Build from allIPs
-    const counts = {};
-    allIPs.forEach(ip => {
-      const key = ip.country;
-      counts[key] = (counts[key] || { count: 0, name: ip.countryName, flag: ip.flag });
-      counts[key].count++;
-    });
-    const sorted = Object.entries(counts).sort((a,b) => b[1].count - a[1].count).slice(0,6);
-    const maxCount = sorted[0]?.[1].count || 1;
-    geoStats = sorted.map(([cc, d]) => ({
-      cc, name: d.name, flag: d.flag,
-      pct: (d.count / allIPs.length * 100)
-    }));
-  }
-
-  const maxPct = Math.max(...geoStats.map(g => g.pct), 1);
-  geoStats.forEach(g => {
-    const row = document.createElement('div');
-    row.className = 'geo-row';
-    row.innerHTML = `
-      <span class="geo-flag">${g.flag}</span>
-      <span class="geo-name">${g.name}</span>
-      <div class="geo-bar-bg"><div class="geo-bar-fill" style="width:${g.pct/maxPct*100}%"></div></div>
-      <span class="geo-pct">${g.pct.toFixed(1)}%</span>
-    `;
-    geoList.appendChild(row);
-  });
-}
-
-function updateAttackTypes(typesFromCF) {
-  const container = document.getElementById('atk-types');
-  container.innerHTML = '';
-
-  let types;
-  if (typesFromCF && Object.keys(typesFromCF).length > 0) {
-    types = Object.entries(typesFromCF).sort((a,b)=>b[1]-a[1]).slice(0,5);
-  } else {
-    // Count from allIPs
-    const counts = {};
-    allIPs.forEach(ip => { counts[ip.attackType] = (counts[ip.attackType]||0) + 1; });
-    types = Object.entries(counts).sort((a,b)=>b[1]-a[1]);
-  }
-
-  const maxVal = types[0]?.[1] || 1;
-  const colors = ['var(--red)','var(--orange)','var(--yellow)','var(--accent)','var(--text)'];
-
-  types.forEach(([type, val], i) => {
-    const row = document.createElement('div');
-    row.className = 'atk-row';
-    row.innerHTML = `
-      <span>${type}</span>
-      <div class="atk-bar-bg">
-        <div class="atk-bar-inner" style="width:${val/maxVal*100}%;background:${colors[i]||colors[4]}"></div>
-        <span class="atk-count">${val}</span>
-      </div>
-    `;
-    container.appendChild(row);
-  });
-}
-
-function getFlagEmoji(cc) {
-  if (!cc || cc.length !== 2) return '🌐';
-  const found = COUNTRIES.find(c => c.cc === cc.toUpperCase());
-  if (found) return found.flag;
-  try {
-    return String.fromCodePoint(...[...cc.toUpperCase()].map(c => 0x1F1E6 - 65 + c.charCodeAt(0)));
-  } catch { return '🌐'; }
-}
-
-// ═══════════════════════════════════════════
-// BACKGROUND CANVAS (placeholder stars)
-// ═══════════════════════════════════════════
-function initBgCanvas() {
-  const canvas = document.getElementById('bg-canvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  canvas.width = canvas.offsetWidth || 800;
-  canvas.height = canvas.offsetHeight || 600;
-
-  const stars = Array.from({length:200}, () => ({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    r: Math.random() * 1.5,
-    v: Math.random() * 0.3
-  }));
-
-  function draw() {
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle = '#000';
-    ctx.fillRect(0,0,canvas.width,canvas.height);
-    stars.forEach(s => {
-      ctx.beginPath();
-      ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
-      ctx.fillStyle = `rgba(0,245,212,${0.3+Math.random()*0.3})`;
-      ctx.fill();
-      s.y -= s.v;
-      if (s.y < 0) { s.y = canvas.height; s.x = Math.random()*canvas.width; }
-    });
-    requestAnimationFrame(draw);
-  }
-  draw();
-}
-initBgCanvas();
-
-// ═══════════════════════════════════════════
-// REFRESH LOOP
-// ═══════════════════════════════════════════
-async function refresh() {
-  log('Refreshing threat intelligence...', 'info');
-  await fetchCloudflareAttacks();
-  // Also check top IPs against AbuseIPDB if key set
-  if (ABUSEIPDB_KEY && allIPs.length > 0) {
-    const top = allIPs.slice(0,5);
-    for (const ip of top) {
-      const abuse = await checkAbuseIPDB(ip.address);
-      if (abuse) {
-        ip.abuseConfidence = abuse.abuseConfidenceScore;
-        ip.reports = abuse.totalReports;
-        const { score } = mlScore(ip);
-        ip.mlScore = score;
-        log(`AbuseIPDB: ${ip.address} — confidence ${abuse.abuseConfidenceScore}%`, 
-            abuse.abuseConfidenceScore > 80 ? 'crit' : 'warn');
-      }
-    }
-    allIPs.sort((a,b) => b.mlScore - a.mlScore);
-    updateDashboard();
-    updateMapData();
-  }
-}
-
-// Initial load
-log('THREAT MONITOR initializing...', 'info');
-log('ML engine loaded — multi-feature anomaly scoring active', 'ok');
-log('Cloudflare Radar API: connecting...', 'info');
-setTimeout(() => {
-  fetchCloudflareAttacks();
-}, 500);
-
-// Refresh every 30 seconds
-setInterval(refresh, 30000);
-
-// Simulate real-time attack events
-setInterval(() => {
-  if (allIPs.length === 0) return;
-  const randIP2 = allIPs[Math.floor(Math.random() * Math.min(10, allIPs.length))];
-  if (randIP2 && randIP2.mlScore >= 70) {
-    log(`Attack detected: ${randIP2.address} → ${randIP2.attackType} (score: ${randIP2.mlScore})`, 'crit');
-  }
-}, 4000 + Math.random() * 4000);
-
-</script>
 <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+<script src="app.js"></script>
 </body>
-  </html>
+</html>
