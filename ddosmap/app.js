@@ -5,7 +5,7 @@
 const TM = (() => {
 
 const WORKER  = 'https://late-wildflower-893d.suhajdakarina.workers.dev';
-const MB_TOKEN = 'pk.eyJ1Ijoic3VoYWpkYWthcmluYSIsImEiOiJjbW00OXpjYXkwNTY4MnBzM2ttaXVhNjNrIn0.6RNu6CQcoD7Gm455tDCm2Q';
+const MB_TOKEN = 'publickey';
 
 /* ML SCORE — 3 real signals only:
    50% AbuseIPDB confidence  — real abuse report data
