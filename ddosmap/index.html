@@ -595,7 +595,8 @@
 // CONFIGURATION
 // ═══════════════════════════════════════════
 let MAPBOX_TOKEN = '';
-let ABUSEIPDB_KEY = '';
+// NEW — just point to your
+const PROXY = 'https://late-wildflower-893d.suhajdakarina.workers.dev';
 let mapInstance = null;
 let threatData = [];
 let allIPs = [];
@@ -893,12 +894,7 @@ async function checkAbuseIPDB(ipAddress) {
   if (!ABUSEIPDB_KEY) return null;
   try {
     // Note: CORS proxy needed for browser. In production, route through your backend.
-    const res = await fetch(`https://api.abuseipdb.com/api/v2/check?ipAddress=${ipAddress}&maxAgeInDays=90`, {
-      headers: {
-        'Key': ABUSEIPDB_KEY,
-        'Accept': 'application/json'
-      }
-    });
+    const res = await fetch(`${PROXY}/abuseipdb?ip=${ipAddress}`);
     if (!res.ok) return null;
     const d = await res.json();
     return d.data;
