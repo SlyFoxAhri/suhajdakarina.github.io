@@ -53,7 +53,7 @@
             <div class="skills_block">
                 <h1 data-en="// Skills" data-hu="// Készségek"></h1>
                 <div class="skills-grid">
-                    <div class="skill-card">C#</div>
+                    <div class="skill-card" >C#</div>
                     <div class="skill-card">Python</div>
                     <div class="skill-card">Java</div>
                     <div class="skill-card">HTML</div>
@@ -62,11 +62,12 @@
                     <div class="skill-card">Git</div>
                     <div class="skill-card">GitHub</div>
                     <div class="skill-card">Docker</div>
-                    <div class="skill-card">Networking</div>
-                    <div class="skill-card">Data Analysis</div>
-                    <div class="skill-card">AI</div>
+                    <div class="skill-card" data-en="Networking" data-hu="Hálózati ismeretek"></div>
+                    <div class="skill-card" data-en="Data Analysis" data-hu="Adatelemzés"></div>
+                    <div class="skill-card" data-en="AI" data-hu="MI"></div>
                     <div class="skill-card">Agile/Scrum</div>
-                    <div class="skill-card">Test-Driven Development</div>
+                    <div class="skill-card" data-en="Test-Driven Development" data-hu="Tesztvezérelt fejlesztés"></div>
+                    <div class="skill-card" data-en="Clean Code principles" data-hu="Clean Code elvek"></div>
                 </div>
             </div>
 
@@ -88,8 +89,7 @@
                 </div>
             </div>
 
-<!--OK-->
-
+            <!--
             <div class="project-card" data-project="1">
                 <div class="project-card-thumb">
                     <span class="play-icon">▶</span>
@@ -99,14 +99,15 @@
                     <p data-en="A retro futuristic command console" data-hu="Egy retro futurisztikus kommand konzol"></p>
                 </div>
             </div>
+        -->
 
-            <div class="project-card" data-project="2">
+            <div class="project-card" data-project="1">
                 <div class="project-card-thumb">
-                    <span class="play-icon">▶</span>
+                    <span class="play-icon"></span>
                 </div>
                 <div class="project-card-info">
-                    <h2>This Portfolio</h2>
-                    <p>Personal portfolio website</p>
+                    <h2 data-en="Portfolio website" data-hu="Portfólió weboldal"></h2>
+                    <p data-en="Personal portfolio website" data-hu="Személyes portfólió weboldal"></p>
                 </div>
             </div>
 
@@ -119,18 +120,16 @@
 
             <button class="modal-close" id="modalClose" aria-label="Close">&times;</button>
 
-            <!-- Video area -->
             <div class="modal-video-wrap">
                 <video id="modalVideo" autoplay muted loop playsinline>
                     <source id="modalVideoSrc" src="" type="video/mp4" />
                     Your browser does not support the video tag.
                 </video>
                 <div class="video-placeholder" id="videoPlaceholder">
-                    <span>▶ Demo Video</span>
+                    <span></span>
                 </div>
             </div>
 
-            <!-- Description area -->
             <div class="modal-description">
                 <h2 id="modalTitle" class="modal-title"></h2>
 

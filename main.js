@@ -1,19 +1,4 @@
-/* ============================================================
-   SUHAJDA KARINA — PORTFOLIO
-   main.js
-   Sections:
-     1. Project Data (EN + HU)
-     2. Language Switcher
-     3. Modal Logic
-     4. Burger Menu
-   ============================================================ */
-
-
-/* ─────────────────────────────────────────────────────────────
-   1. PROJECT DATA
-   Each project has an `en` and `hu` block.
-   Add your video path to the `video` field when ready.
-───────────────────────────────────────────────────────────── */
+//PROJECT DATA
 const projects = [
     {
         video: "videos/grpc_vid.mp4", 
@@ -46,8 +31,9 @@ const projects = [
             ],
             techStack: ["C#", "gRPC", "Protocol Buffers", "Docker", "REST"],
         },
-        links: [{ label: "GitHub", url: "https://github.com/SlyFoxAhri" }]
+        links: [{ label: "GitHub", url: "https://github.com/SlyFoxAhri/GrpcService_final" }]
     },
+    /*
     {
         video: "",
         en: {
@@ -74,12 +60,12 @@ const projects = [
         },
         links: [{ label: "GitHub", url: "https://github.com/SlyFoxAhri" }]
 
-    },
+    },*/
     {
         video: "",
         en: {
-            title: "This Portfolio",
-            overview: "A clean, responsive personal portfolio site designed and built from scratch to showcase projects and skills.",
+            title: "Portfolio",
+            overview: "A clean, responsive personal portfolio site built to showcase projects and skills.",
             highlights: [
                 "Fully responsive layout",
                 "Interactive project modal system",
@@ -89,27 +75,22 @@ const projects = [
             techStack: ["HTML", "CSS", "JavaScript"]
         },
         hu: {
-            title: "Ez a Portfólió",
-            overview: "Letisztult, reszponzív személyes portfólió weboldal, amelyet nulláról terveztem és építettem a projektek és készségek bemutatására.",
+            title: "Portfólió",
+            overview: "Letisztult, reszponzív személyes portfólió weboldal, amelyet a projektek és készségek bemutatására készítettem.",
             highlights: [
-                "Teljesen reszponzív elrendezés",
+                "Reszponzív elrendezés",
                 "Interaktív projekt modal rendszer",
-                "Sima animációk és átmenetek",
+                "Letisztult animációk és átmenetek",
                 "Akadálymentes kód és billentyűzetes navigáció"
             ],
             techStack: ["HTML", "CSS", "JavaScript"]
         },
-        links: [{ label: "GitHub", url: "https://github.com/SlyFoxAhri" }]
+        links: [{ label: "GitHub", url: "https://github.com/SlyFoxAhri/suhajdakarina.github.io" }]
     }
 ];
 
 
-/* ─────────────────────────────────────────────────────────────
-   2. LANGUAGE SWITCHER
-   - Reads data-en / data-hu attributes on every translatable element
-   - Re-populates open modal if one is active
-   - Saves preference to localStorage
-───────────────────────────────────────────────────────────── */
+//LANGUAGE SWITCHER
 let currentLang = localStorage.getItem('lang') || 'en';
 
 function applyLanguage(lang) {
@@ -142,9 +123,7 @@ document.querySelectorAll('#lang-selector .hybrid-btn').forEach(btn => {
 applyLanguage(currentLang);
 
 
-/* ─────────────────────────────────────────────────────────────
-   3. MODAL LOGIC
-───────────────────────────────────────────────────────────── */
+//MODAL LOGIC
 const modal            = document.getElementById('projectModal');
 const modalClose       = document.getElementById('modalClose');
 const backdrop         = modal.querySelector('.project-modal-backdrop');
@@ -186,6 +165,7 @@ function openProject(index) {
     document.querySelectorAll('.project-card').forEach(c => c.classList.remove('modal-open'));
     document.querySelector(`.project-card[data-project="${index}"]`).classList.add('modal-open');
 
+
     if (projects[index].video) {
         modalVideoSrc.src = projects[index].video;
         modalVideo.load();
@@ -221,9 +201,7 @@ backdrop.addEventListener('click', closeModal);
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
 
-/* ─────────────────────────────────────────────────────────────
-   4. BURGER MENU (mobile)
-───────────────────────────────────────────────────────────── */
+//4. BURGER MENU (mobile)
 const burger      = document.getElementById('burger');
 const contactList = document.querySelector('.contacts_list');
 
