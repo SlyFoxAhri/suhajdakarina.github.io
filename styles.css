@@ -640,8 +640,28 @@ header {
 }
 
 /* Overview and Links span full width */
-.modal-module:first-child,
-.modal-module:last-child { grid-column: 1 / -1; }
+.modal-module:first-child {
+    grid-column: 1 / -1; /* Spans both columns */
+    margin-bottom: 20px;
+}
+
+/* Tech Stack - goes to left column */
+.modal-module:nth-child(2) {
+    grid-row: 2 / 3;
+    grid-column: 1 / 2;
+}
+
+/* Highlights - spans full height on right */
+.modal-module:nth-child(3) {
+    grid-row: 2 / 4; /* Spans 2 rows */
+    grid-column: 2 / 3;
+}
+
+/* Links - below Tech Stack on left */
+.modal-module:nth-child(4) {
+    grid-row: 3 / 4;
+    grid-column: 1 / 2;
+}
 
 .modal-module {
     background: var(--surface-2);

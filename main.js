@@ -61,29 +61,85 @@ const projects = [
         links: [{ label: "GitHub", url: "https://github.com/SlyFoxAhri" }]
 
     },*/
+        {
+        video: "",
+        thumbnail: "pictures/Screenshot_20260610_184916.png",
+        en: {
+            title: "REST API backend",
+            overview: "A backend service for a simple social media app that lets users create, update, delete and trade their original characters, with user roles and database management",
+            highlights: [
+                "Structured file system",
+                "Hashed + salted storing of user credentials",
+                "Token based authentication",
+                "Database isolation and atomicity",
+                "File up and download"
+            ],
+            techStack: ["JavaScript", "SQLite", "Node.js", "NPM", "Express"]
+        },
+        hu: {
+            title: "REST API backend",
+            overview: "Egy szimpla közösségi média backend ami lehetővé teszi hogy a felhasználók készíthesenek és elcseréljék egymásal a létrehozott egyedi karaktereiket, felhasználói szerepek és adtbáziskezeléssel",
+            highlights: [
+                "Struktúrált fájlrendszer",
+                "Hashed-elt + sózott tárolása a felhasználó adatoknak",
+                "Token alapú hitelesítés",
+                "Fájlok fel- és letöltése"
+            ],
+            techStack: ["JavaScript", "SQLite", "Node.js", "NPM", "Express"]
+        },
+        links: [{ label: "GitHub", url: "https://github.com/SlyFoxAhri/OC_trader" }]
+    },
+    {
+        video: "videos/faces.mp4", 
+        thumbnail: "",
+        en: {
+            title: "Kitty tamagotchi",
+            overview: "Virtual pet cat with 2 minigames and real time needs that require day-to-day care. If you neglect it, it will start to meow until their needs are met, just like a real cat!",
+            highlights: [
+                "Dynamic state mchine",
+                "Interactive minigames",
+                "Non-blocking logic",
+                "Cute"
+
+            ],
+            techStack: ["C++", "8x8 LED Matrix", "Elegoo UNO R3", "Microcontroller"]
+        },
+        hu: {
+            title: "Cica tamagotchi",
+            overview: "Virtuális cica 2 minijátékal és valós idejű szükségletekkel amik nap mint map figyelemre szorulank. Ha elhanyagolod akkor elkezd nyávogni amig nem foglalkozol vele, pont mint egy igazi macska!",
+            highlights: [
+                "Dinamikus állapotgép",
+                "Interaktív minijátékok",
+                "Nem blokkoló logika",
+                "Aranyos"
+            ],
+            techStack: ["C++", "8x8 LED Mátrix", "Elegoo UNO R3", "Mikrokontroller"]
+        },
+        links: [{ label: "GitHub", url: "https://github.com/SlyFoxAhri/kitty_tamagochi" }]
+    },
     {
         video: "",
         en: {
-            title: "Portfolio",
-            overview: "A clean, responsive personal portfolio site built to showcase projects and skills.",
+            title: "Personal website",
+            overview: "A clean, responsive personal website built to showcase my projects and skills.",
             highlights: [
-                "Fully responsive layout",
+                "Responsive layout",
                 "Interactive project modal system",
                 "Smooth animations and transitions",
                 "Accessible markup and keyboard navigation"
             ],
-            techStack: ["HTML", "CSS", "JavaScript"]
+            techStack: ["HTML", "CSS", "JavaScript, Github, Cloudflare"]
         },
         hu: {
-            title: "Portfólió",
-            overview: "Letisztult, reszponzív személyes portfólió weboldal, amelyet a projektek és készségek bemutatására készítettem.",
+            title: "Személyes weboldal",
+            overview: "Letisztult, reszponzív személyes weboldal, amit a projektjeim és készségeim bemutatására készítettem.",
             highlights: [
                 "Reszponzív elrendezés",
                 "Interaktív projekt modal rendszer",
                 "Letisztult animációk és átmenetek",
                 "Akadálymentes kód és billentyűzetes navigáció"
             ],
-            techStack: ["HTML", "CSS", "JavaScript"]
+            techStack: ["HTML", "CSS", "JavaScript, Github, Cloudflare"]
         },
         links: [{ label: "GitHub", url: "https://github.com/SlyFoxAhri/suhajdakarina.github.io" }]
     }
