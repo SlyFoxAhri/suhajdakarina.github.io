@@ -1,6 +1,39 @@
 //PROJECT DATA
 const projects = [
     {
+        video: "videos/mold.mp4", 
+        thumbnail: "",
+        en: {
+            title: "Slime mold(Physarum) simulation",
+            overview: "A secure backend service built around gRPC, enabling efficient, communication between microservices with a WPF minimalist frontend.",
+            highlights: [
+                "Auto-generated client/server stubs via protobuf",
+                "Hashed + salted storing of user credentials",
+                "Token based authentication",
+                "TLS encryption",
+                "Parameterised SQL",
+                "Input validation",
+                "Messsage size limiting"
+            ],
+            techStack: ["C++", "raylib", "Protocol Buffers", "Docker", "REST"]
+        },
+        hu: {
+            title: "Nyálkagomba(Physarum) szimuláció",
+            overview: "Biztonságos backend szolgáltatás gRPC alapon, amely hatékony kommunikációt tesz lehetővé mikroszolgáltatások között,  WPF minimalista frontend-el.",
+            highlights: [
+                "Auto-generált cliens/szerver stub-ok protobuf segítségével",
+                "Hashed-elt + sózott tárolása a felhasználó adatoknak",
+                "Token alapú hitelesítés",
+                "TLS titkosítás",
+                "Paraméterezett SQL",
+                "Adat validáció",
+                "Üzenet méret limitálás"
+            ],
+            techStack: ["C++#", "raylib", "Protocol Buffers", "Docker", "REST"],
+        },
+        links: [{ label: "GitHub", url: "https://github.com/SlyFoxAhri/GrpcService_final" }]
+    },
+    {
         video: "videos/grpc_vid.mp4", 
         thumbnail: "",
         en: {
@@ -33,35 +66,7 @@ const projects = [
         },
         links: [{ label: "GitHub", url: "https://github.com/SlyFoxAhri/GrpcService_final" }]
     },
-    /*
     {
-        video: "",
-        en: {
-            title: "Retro Console",
-            overview: "A retro-futuristic command console web application with a terminal aesthetic — green-on-black, CRT scanlines, and a custom command parser.",
-            highlights: [
-                "Custom command interpreter",
-                "Animated CRT scanline & glow effects",
-                "Keyboard-driven UX",
-                "Extensible command plugin system"
-            ],
-            techStack: ["HTML", "CSS", "JavaScript", "Python"]
-        },
-        hu: {
-            title: "Retró Konzol",
-            overview: "Retro-futurisztikus parancssoros webalkalmazás terminál esztétikával — zöld-fekete, CRT scanline effektek és egyéni parancsértelmező.",
-            highlights: [
-                "Egyéni parancsértelmező",
-                "Animált CRT scanline és fényhatások",
-                "Billentyűzettel vezérelt UX",
-                "Bővíthető parancsbővítmény rendszer"
-            ],
-            techStack: ["HTML", "CSS", "JavaScript", "Python"]
-        },
-        links: [{ label: "GitHub", url: "https://github.com/SlyFoxAhri" }]
-
-    },*/
-        {
         video: "",
         thumbnail: "pictures/Screenshot_20260610_184916.png",
         en: {
