@@ -5,33 +5,31 @@ const projects = [
         thumbnail: "",
         en: {
             title: "Slime mold(Physarum) simulation",
-            overview: "A secure backend service built around gRPC, enabling efficient, communication between microservices with a WPF minimalist frontend.",
+            overview: "Interactive simulation of behaviour of physarium and it's transport networks, based on an algorithm used to optimise solutions for graph problems.",
             highlights: [
-                "Auto-generated client/server stubs via protobuf",
-                "Hashed + salted storing of user credentials",
-                "Token based authentication",
-                "TLS encryption",
-                "Parameterised SQL",
-                "Input validation",
-                "Messsage size limiting"
+                "Agent based simulation",
+                "Trail deposition, diffusion, and evaporation",
+                "Real time controls",
+                "Configurable behaviour",
+                "Grid based enviroment",
+                "Cross platform build system"
             ],
-            techStack: ["C++", "raylib", "Protocol Buffers", "Docker", "REST"]
+            techStack: ["C++", "Raylib", "Cmake"]
         },
         hu: {
             title: "Nyálkagomba(Physarum) szimuláció",
-            overview: "Biztonságos backend szolgáltatás gRPC alapon, amely hatékony kommunikációt tesz lehetővé mikroszolgáltatások között,  WPF minimalista frontend-el.",
+            overview: "A nyálkagomba viselkedésének és terjedési hálózatainak interaktív szimulációja, a gráfproblémák megoldásának optimalizálására használt algoritmus alapján.",
             highlights: [
-                "Auto-generált cliens/szerver stub-ok protobuf segítségével",
-                "Hashed-elt + sózott tárolása a felhasználó adatoknak",
-                "Token alapú hitelesítés",
-                "TLS titkosítás",
-                "Paraméterezett SQL",
-                "Adat validáció",
-                "Üzenet méret limitálás"
+                "Ágensalapú szimuláció",
+                "Nyomvonalak lerakása, diffúziója és párolgása",
+                "Valós idejű vezérlés",
+                "Konfigurálható viselkedés",
+                "Rácsalapú környezet",
+                "Platformfüggetlen buildrendszer"
             ],
-            techStack: ["C++#", "raylib", "Protocol Buffers", "Docker", "REST"],
+            techStack: ["C++", "Raylib", "Cmake"],
         },
-        links: [{ label: "GitHub", url: "https://github.com/SlyFoxAhri/GrpcService_final" }]
+        links: [{ label: "GitHub", url: "https://github.com/SlyFoxAhri/SlimeMold" }]
     },
     {
         video: "videos/grpc_vid.mp4", 
