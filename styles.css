@@ -345,9 +345,11 @@ header {
 /* WORK EXPERIENCE SECTION */
 .work_experience_section{
     position: relative;
+    z-index: 1;
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem 2rem 6rem;
+    animation: fadeUp 0.6s 0.15s ease both;
 }
 
 .experience_details { 
