@@ -1,35 +1,60 @@
 //PROJECT DATA
 const projects = [
     {
-        video: "videos/mold.mp4", 
+        video: "videos/faces.mp4", 
         thumbnail: "",
         en: {
-            title: "Slime mold(Physarum) simulation",
-            overview: "Interactive simulation of behaviour of physarium and it's transport networks, based on an algorithm used to optimise solutions for graph problems.",
+            title: "Kitty tamagotchi",
+            overview: "Virtual pet cat with 2 minigames and real time needs that require day-to-day care. If you neglect it, it will start to meow until their needs are met, just like a real cat!",
             highlights: [
-                "Agent based simulation",
-                "Trail deposition, diffusion, and evaporation",
-                "Real time controls",
-                "Configurable behaviour",
-                "Grid based enviroment",
-                "Cross platform build system"
+                "Dynamic state mchine",
+                "Interactive minigames",
+                "Non-blocking logic",
+                "Cute"
+
             ],
-            techStack: ["C++", "Raylib", "Cmake"]
+            techStack: ["C++", "8x8 LED Matrix", "Elegoo UNO R3", "Microcontroller"]
         },
         hu: {
-            title: "Nyálkagomba(Physarum) szimuláció",
-            overview: "A nyálkagomba viselkedésének és terjedési hálózatainak interaktív szimulációja, a gráfproblémák megoldásának optimalizálására használt algoritmus alapján.",
+            title: "Cica tamagotchi",
+            overview: "Virtuális cica 2 minijátékal és valós idejű szükségletekkel amik nap mint map figyelemre szorulank. Ha elhanyagolod akkor elkezd nyávogni amig nem foglalkozol vele, pont mint egy igazi macska!",
             highlights: [
-                "Ágensalapú szimuláció",
-                "Nyomvonalak lerakása, diffúziója és párolgása",
-                "Valós idejű vezérlés",
-                "Konfigurálható viselkedés",
-                "Rácsalapú környezet",
-                "Platformfüggetlen buildrendszer"
+                "Dinamikus állapotgép",
+                "Interaktív minijátékok",
+                "Nem blokkoló logika",
+                "Aranyos"
             ],
-            techStack: ["C++", "Raylib", "Cmake"],
+            techStack: ["C++", "8x8 LED Mátrix", "Elegoo UNO R3", "Mikrokontroller"]
         },
-        links: [{ label: "GitHub", url: "https://github.com/SlyFoxAhri/SlimeMold" }]
+        links: [{ label: "GitHub", url: "https://github.com/SlyFoxAhri/kitty_tamagochi" }]
+    },
+    {
+        video: "",
+        thumbnail: "pictures/Screenshot_20260610_184916.png",
+        en: {
+            title: "REST API backend",
+            overview: "A backend service for a simple social media app that lets users create, update, delete and trade their original characters, with user roles and database management",
+            highlights: [
+                "Structured file system",
+                "Hashed + salted storing of user credentials",
+                "Token based authentication",
+                "Database isolation and atomicity",
+                "File up and download"
+            ],
+            techStack: ["JavaScript", "SQLite", "Node.js", "NPM", "Express"]
+        },
+        hu: {
+            title: "REST API backend",
+            overview: "Egy szimpla közösségi média backend ami lehetővé teszi hogy a felhasználók készíthesenek és elcseréljék egymásal a létrehozott egyedi karaktereiket, felhasználói szerepek és adtbáziskezeléssel",
+            highlights: [
+                "Struktúrált fájlrendszer",
+                "Hashed-elt + sózott tárolása a felhasználó adatoknak",
+                "Token alapú hitelesítés",
+                "Fájlok fel- és letöltése"
+            ],
+            techStack: ["JavaScript", "SQLite", "Node.js", "NPM", "Express"]
+        },
+        links: [{ label: "GitHub", url: "https://github.com/SlyFoxAhri/OC_trader" }]
     },
     {
         video: "videos/grpc_vid.mp4", 
@@ -65,61 +90,66 @@ const projects = [
         links: [{ label: "GitHub", url: "https://github.com/SlyFoxAhri/GrpcService_final" }]
     },
     {
-        video: "",
-        thumbnail: "pictures/Screenshot_20260610_184916.png",
-        en: {
-            title: "REST API backend",
-            overview: "A backend service for a simple social media app that lets users create, update, delete and trade their original characters, with user roles and database management",
-            highlights: [
-                "Structured file system",
-                "Hashed + salted storing of user credentials",
-                "Token based authentication",
-                "Database isolation and atomicity",
-                "File up and download"
-            ],
-            techStack: ["JavaScript", "SQLite", "Node.js", "NPM", "Express"]
-        },
-        hu: {
-            title: "REST API backend",
-            overview: "Egy szimpla közösségi média backend ami lehetővé teszi hogy a felhasználók készíthesenek és elcseréljék egymásal a létrehozott egyedi karaktereiket, felhasználói szerepek és adtbáziskezeléssel",
-            highlights: [
-                "Struktúrált fájlrendszer",
-                "Hashed-elt + sózott tárolása a felhasználó adatoknak",
-                "Token alapú hitelesítés",
-                "Fájlok fel- és letöltése"
-            ],
-            techStack: ["JavaScript", "SQLite", "Node.js", "NPM", "Express"]
-        },
-        links: [{ label: "GitHub", url: "https://github.com/SlyFoxAhri/OC_trader" }]
-    },
-    {
-        video: "videos/faces.mp4", 
+        video: "videos/mold.mp4", 
         thumbnail: "",
         en: {
-            title: "Kitty tamagotchi",
-            overview: "Virtual pet cat with 2 minigames and real time needs that require day-to-day care. If you neglect it, it will start to meow until their needs are met, just like a real cat!",
+            title: "Slime mold(Physarum) simulation",
+            overview: "Interactive simulation of behaviour of physarium and it's transport networks, based on an algorithm used to optimise solutions for graph problems.",
             highlights: [
-                "Dynamic state mchine",
-                "Interactive minigames",
-                "Non-blocking logic",
-                "Cute"
-
+                "Agent based simulation",
+                "Trail deposition, diffusion, and evaporation",
+                "Real time controls",
+                "Configurable behaviour",
+                "Grid based enviroment",
+                "Cross platform build system"
             ],
-            techStack: ["C++", "8x8 LED Matrix", "Elegoo UNO R3", "Microcontroller"]
+            techStack: ["C++", "Raylib", "Cmake"]
         },
         hu: {
-            title: "Cica tamagotchi",
-            overview: "Virtuális cica 2 minijátékal és valós idejű szükségletekkel amik nap mint map figyelemre szorulank. Ha elhanyagolod akkor elkezd nyávogni amig nem foglalkozol vele, pont mint egy igazi macska!",
+            title: "Nyálkagomba(Physarum) szimuláció",
+            overview: "A nyálkagomba viselkedésének és terjedési hálózatainak interaktív szimulációja, a gráfproblémák megoldásának optimalizálására használt algoritmus alapján.",
             highlights: [
-                "Dinamikus állapotgép",
-                "Interaktív minijátékok",
-                "Nem blokkoló logika",
-                "Aranyos"
+                "Ágensalapú szimuláció",
+                "Nyomvonalak lerakása, diffúziója és párolgása",
+                "Valós idejű vezérlés",
+                "Konfigurálható viselkedés",
+                "Rácsalapú környezet",
+                "Platformfüggetlen buildrendszer"
             ],
-            techStack: ["C++", "8x8 LED Mátrix", "Elegoo UNO R3", "Mikrokontroller"]
+            techStack: ["C++", "C", "Raylib", "Cmake"],
         },
-        links: [{ label: "GitHub", url: "https://github.com/SlyFoxAhri/kitty_tamagochi" }]
+        links: [{ label: "GitHub", url: "https://github.com/SlyFoxAhri/SlimeMold" }]
     },
+    {
+        video: "videos/loading.mp4", 
+        thumbnail: "",
+        en: {
+            title: "Gzip decompressor written from scratch",
+            overview: "A gzip decompressor written from scratch without relying on an external library.",
+            highlights: [
+                "Parses gzip headers and validates structure",
+                "Decodes DEFLATE blocks",
+                "Implements Huffamn decoding",
+                "Reconstructs data using LZ77 algorithm",
+                "Handles compressed binary data at byte and bit level",
+            ],
+            techStack: ["C", "Huffman coding", "LZ77", "gzip"]
+        },
+        hu: {
+            title: "Gzip kicsomagoló",
+            overview: "Egy teljesen saját fejlesztésű gzip-kicsomagoló, külső könyvtárak használata nélkül.",
+            highlights: [
+                "Parsolja a gzip-fejléceket és validálja a szerkezetét",
+                "Dekódolja a DEFLATE-blokkokat",
+                "Implementálja a Huffman-dekódolást",
+                "Rekonstruálja az adatokat LZ77 algoritmus segítségével",
+                "Bájt- és bit-szinten kezeli a tömörített bináris adatokat",
+            ],
+            techStack: ["C", "Huffman-kódolás", "LZ77", "gzip"],
+        },
+        links: [{ label: "GitHub", url: "https://github.com/SlyFoxAhri/zipper" }]
+    }
+    /*
     {
         video: "",
         en: {
@@ -145,7 +175,7 @@ const projects = [
             techStack: ["HTML", "CSS", "JavaScript, Github, Cloudflare"]
         },
         links: [{ label: "GitHub", url: "https://github.com/SlyFoxAhri/suhajdakarina.github.io" }]
-    }
+    }*/
 ];
 
 
