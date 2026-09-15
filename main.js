@@ -180,7 +180,7 @@ const projects = [
 
 
 //LANGUAGE SWITCHER
-let currentLang = localStorage.getItem('lang') || 'en';
+let currentLang = localStorage.getItem('lang') || 'hu';
 
 function applyLanguage(lang) {
     currentLang = lang;
